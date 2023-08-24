@@ -52,7 +52,6 @@ function Login() {
       } else {
         localStorage.removeItem("token");
         navigate("/login");
-        throw new Error(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false))
