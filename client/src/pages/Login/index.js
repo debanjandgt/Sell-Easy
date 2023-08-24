@@ -14,46 +14,33 @@ const rules = [
   },
 ];
 
-function Login() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
-  const handleLogin = async (values) => {
-    try {
-      dispatch(SetLoader(true));
-      const response = await LoginUser(values);
-      dispatch(SetLoader(false));
-      
-      if (response.success) {
-        message.success(response.message);
-        localStorage.setItem("token", response.data);
-        navigate("/"); // Navigate after successful login
-      } else {
-        throw new Error("amar problem1");
-      }
-    } catch (error) {
-      dispatch(SetLoader(false));
-      message.error("amar problem12");
-    }
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-
-        if (decodedToken.exp < currentTime) {
-          throw new Error("Token expired");
+const login = async () => {
+        try {
+            dispatch(ShowLoader());
+            const response = await LoginUser(user);
+            dispatch(HideLoader());
+            if (response.success) {
+                toast.success(response.message);
+                localStorage.setItem('token', response.data);
+                window.location.href = '/';
+            }
+            else {
+                toast.error(response.message);
+            }
         }
-      } catch (error) {
-        console.error("Token error:", error);
-        localStorage.removeItem("token");
-        navigate("/login"); // Navigate to login on token error
-      }
+        catch (error) {
+            {
+                toast.error(error.message);
+                dispatch(HideLoader());
+            }
+        }
     }
-  }, [navigate]);
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            navigate('/');
+        }
+    }, []);
+
 
   return (
     <div className="h-screen bg-cyan-400 flex justify-center items-center">
