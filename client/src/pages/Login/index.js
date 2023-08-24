@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, message, notification } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Divider from "../../components/Divider";
 import { LoginUser } from "../../apicalls/users";
@@ -18,8 +18,8 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [user, setUser] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleLogin = async () => {
@@ -31,22 +31,18 @@ function Login() {
       if (response.success) {
         message.success(response.message);
         localStorage.setItem("token", response.data);
-        navigate('/');
+        navigate("/");
       } else {
         message.error(response.message);
-        localStorage.removeItem('token');
-        navigate('/login');
       }
     } catch (error) {
       dispatch(SetLoader(false));
       message.error(error.message);
-       localStorage.removeItem('token');
-        navigate('/login');
     }
   };
 
   useEffect(() => {
-    const existingToken = localStorage.getItem('token');
+    const existingToken = localStorage.getItem("token");
 
     if (existingToken) {
       const decodedToken = jwtDecode(existingToken);
@@ -54,12 +50,15 @@ function Login() {
 
       if (decodedToken.exp < currentTime) {
         // Token has expired, remove it
-        localStorage.removeItem('token');
-        navigate('/login');
+        localStorage.removeItem("token");
+        navigate("/login");
       } else {
         // Token is valid, navigate to the home page
-        navigate('/');
+        navigate("/");
       }
+    } else {
+      // No token found, navigate to the login page
+      navigate("/login");
     }
   }, []);
 
@@ -72,13 +71,29 @@ function Login() {
         <Divider />
         <Form layout="vertical" onFinish={handleLogin}>
           <Form.Item label="Email" name="email" rules={rules}>
-            <Input placeholder="Email" onChange={e => setUser({ ...user, email: e.target.value })} />
+            <Input
+              placeholder="Email"
+              onChange={(e) =>
+                setUser({ ...user, email: e.target.value })
+              }
+            />
           </Form.Item>
           <Form.Item label="Password" name="password" rules={rules}>
-            <Input type="password" placeholder="Password" onChange={e => setUser({ ...user, password: e.target.value })} />
+            <Input
+              type="password"
+              placeholder="Password"
+              onChange={(e) =>
+                setUser({ ...user, password: e.target.value })
+              }
+            />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit" block className="mt-2 bg-sky-500 hover:bg-blue-700 ">
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            className="mt-2 bg-sky-500 hover:bg-blue-700 "
+          >
             Login
           </Button>
 
