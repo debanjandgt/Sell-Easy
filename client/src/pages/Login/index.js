@@ -21,17 +21,20 @@ function Login() {
   dispatch(SetLoader(true));
   const response = await LoginUser(values);
   dispatch(SetLoader(false));
-  if (response.success) {
-    message.success(response.message);
-    const token = response.data;
-    const existingToken = localStorage.getItem("token");
-    if (existingToken) {
-      const decodedToken = jwtDecode(existingToken);
-      const currentTime = Date.now() / 1000;
-       if (decodedToken && decodedToken.exp < currentTime) {
+ if (response.success) {
+        message.success(response.message);
+        const token = response.data;
+        const existingToken = localStorage.getItem("token");
+        if (existingToken) {
+          const decodedToken = existingToken ? jwtDecode(existingToken) : null;
+          const currentTime = Date.now() / 1000;
+          if (decodedToken && decodedToken.exp < currentTime) {
             localStorage.removeItem("token");
           }
-    } else {
+        }
+        localStorage.setItem("token", token);
+        window.location.href = "/";
+      } else {
       localStorage.setItem("token", token);
     }
     window.location.href = "/";
