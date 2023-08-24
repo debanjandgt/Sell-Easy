@@ -35,6 +35,7 @@ function Login() {
                 
                 toast.error(response.message);
               localStorage.removeItem("token");
+              window.location.href = '/login';
             }
         }
         catch (error) {
