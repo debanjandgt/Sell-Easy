@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Divider from "../../components/Divider";
@@ -13,35 +13,45 @@ const rules = [
     message: "required",
   },
 ];
+function Login() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const onFinish = async (values) => {
+    try {
+      dispatch(SetLoader(true));
+      const response = await LoginUser(values);
+      dispatch(SetLoader(false));
+      if (response.success) {
+        message.success(response.message);
+        const token = response.data;
+        const existingToken = localStorage.getItem("token");
+        if (existingToken) {
+          const decodedToken = existingToken ? jwtDecode(existingToken) : null;
 
-const login = async () => {
-        try {
-            dispatch(ShowLoader());
-            const response = await LoginUser(user);
-            dispatch(HideLoader());
-            if (response.success) {
-                toast.success(response.message);
-                localStorage.setItem('token', response.data);
-                window.location.href = '/';
-            }
-            else {
-           
-                  localStorage.removeItem("token");
-              window.location.href = '/login';
-            }
+          const currentTime = Date.now() / 1000;
+          if (decodedToken.exp < currentTime) {
+            localStorage.removeItem("token");
+          }
         }
-        catch (error) {
-            {
-                
-                 localStorage.removeItem("token");
-              window.location.href = '/login';
-              console.log("1");
-            }
-        }
+        localStorage.setItem("token", token);
+        window.location.href = "/";
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      dispatch(SetLoader(false));
+      message.error(error.message);
     }
+  };
   
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) 
+    {
 
+      navigate("/");
+    }
+  }, []);
   return (
     <div className="h-screen bg-cyan-400 flex justify-center items-center">
       <div className="bg-white p-5 rounded w-[450px]">
@@ -49,31 +59,15 @@ const login = async () => {
           SELL EASY - <span className="text-gray-400 text-2xl">LOGIN</span>
         </h1>
         <Divider />
-        <Form layout="vertical" onFinish={handleLogin}>
+        <Form layout="vertical" onFinish={onFinish}>
           <Form.Item label="Email" name="email" rules={rules}>
-            <Input
-              placeholder="Email"
-              onChange={(e) =>
-                setUser({ ...user, email: e.target.value })
-              }
-            />
+            <Input placeholder="Email" />
           </Form.Item>
           <Form.Item label="Password" name="password" rules={rules}>
-            <Input
-              type="password"
-              placeholder="Password"
-              onChange={(e) =>
-                setUser({ ...user, password: e.target.value })
-              }
-            />
+            <Input type="password" placeholder="Password" />
           </Form.Item>
 
-          <Button
-            type="primary"
-            htmlType="submit"
-            block
-            className="mt-2 bg-sky-500 hover:bg-blue-700 "
-          >
+          <Button type="primary" htmlType="submit" block className="mt-2 bg-sky-500 hover:bg-blue-700 ">
             Login
           </Button>
 
