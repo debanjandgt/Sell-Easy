@@ -17,31 +17,35 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onFinish = async (values) => {
-    try {
-      dispatch(SetLoader(true));
-      const response = await LoginUser(values);
-      dispatch(SetLoader(false));
-      if (response.success) {
-        message.success(response.message);
-        const token = response.data;
-        const existingToken = localStorage.getItem("token");
-        if (existingToken) {
-          const decodedToken = existingToken ? jwtDecode(existingToken) : null;
-
-          const currentTime = Date.now() / 1000;
-          if (decodedToken.exp < currentTime) {
-            localStorage.removeItem("token");
-          }
-        }
+   try {
+  dispatch(SetLoader(true));
+  const response = await LoginUser(values);
+  dispatch(SetLoader(false));
+  if (response.success) {
+    message.success(response.message);
+    const token = response.data;
+    const existingToken = localStorage.getItem("token");
+    if (existingToken) {
+      const decodedToken = jwtDecode(existingToken);
+      const currentTime = Date.now() / 1000;
+      if (decodedToken.exp < currentTime) {
+        // Token has expired, remove the old token
+        localStorage.removeItem("token");
+        // Assign the new token
         localStorage.setItem("token", token);
-        window.location.href = "/";
-      } else {
-        throw new Error(response.message);
       }
-    } catch (error) {
-      dispatch(SetLoader(false));
-      message.error(error.message);
+    } else {
+      localStorage.setItem("token", token);
     }
+    window.location.href = "/";
+  } else {
+    throw new Error(response.message);
+  }
+} catch (error) {
+  dispatch(SetLoader(false));
+  message.error(error.message);
+}
+
   };
   
 
