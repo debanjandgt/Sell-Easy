@@ -29,7 +29,7 @@ function Login() {
         localStorage.setItem("token", response.data);
         navigate("/"); // Navigate after successful login
       } else {
-        throw new Error(response.message);
+        throw new Error("amar problem);
       }
     } catch (error) {
       dispatch(SetLoader(false));
