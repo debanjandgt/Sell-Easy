@@ -26,12 +26,14 @@ const login = async () => {
             }
             else {
                 toast.error(response.message);
+                  localStorage.removeItem("token");
             }
         }
         catch (error) {
             {
                 toast.error(error.message);
                 dispatch(HideLoader());
+                 localStorage.removeItem("token");
             }
         }
     }
@@ -39,6 +41,8 @@ const login = async () => {
         if (localStorage.getItem('token')) {
             navigate('/');
         }
+      else
+          navigate('/login');
     }, []);
 
 
