@@ -17,48 +17,27 @@ const rules = [
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleLogin = async () => {
+  const onFinish = async (values) => {
     try {
-      dispatch(SetLoader(true));
-      const response = await LoginUser(user);
-      dispatch(SetLoader(false));
-
+      dispatch(SetLoader(true))
+      const response = await LoginUser(values);
+      dispatch(SetLoader(false))
       if (response.success) {
         message.success(response.message);
         localStorage.setItem("token", response.data);
-        navigate("/");
+        window.location.href = "/";
       } else {
-        message.error(response.message);
+        throw new Error(response.message);
       }
     } catch (error) {
-      dispatch(SetLoader(false));
+      dispatch(SetLoader(false))
       message.error(error.message);
     }
   };
 
   useEffect(() => {
-    const existingToken = localStorage.getItem("token");
-
-    if (existingToken) {
-      const decodedToken = jwtDecode(existingToken);
-      const currentTime = Math.floor(Date.now() / 1000);
-
-      if (decodedToken.exp < currentTime) {
-        // Token has expired, remove it
-        localStorage.removeItem("token");
-        navigate("/login");
-      } else {
-        // Token is valid, navigate to the home page
-        navigate("/");
-      }
-    } else {
-      // No token found, navigate to the login page
-      navigate("/login");
+    if (localStorage.getItem("token")) {
+      navigate("/");
     }
   }, []);
 
