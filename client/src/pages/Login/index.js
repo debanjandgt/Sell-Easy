@@ -17,29 +17,43 @@ const rules = [
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const onFinish = async (values) => {
+  
+  const handleLogin = async (values) => {
     try {
-      dispatch(SetLoader(true))
+      dispatch(SetLoader(true));
       const response = await LoginUser(values);
-      dispatch(SetLoader(false))
+      dispatch(SetLoader(false));
+      
       if (response.success) {
         message.success(response.message);
         localStorage.setItem("token", response.data);
-        window.location.href = "/";
+        navigate("/"); // Navigate after successful login
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      dispatch(SetLoader(false))
+      dispatch(SetLoader(false));
       message.error(error.message);
     }
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/");
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          localStorage.removeItem("token");
+          navigate("/login"); // Navigate to login if token expired
+        }
+      } catch (error) {
+        localStorage.removeItem("token");
+        navigate("/login"); // Navigate to login if token is invalid
+      }
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="h-screen bg-cyan-400 flex justify-center items-center">
