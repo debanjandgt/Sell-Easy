@@ -28,12 +28,9 @@ function Login() {
     if (existingToken) {
       const decodedToken = jwtDecode(existingToken);
       const currentTime = Date.now() / 1000;
-      if (decodedToken.exp < currentTime) {
-        // Token has expired, remove the old token
-        localStorage.removeItem("token");
-        // Assign the new token
-        localStorage.setItem("token", token);
-      }
+       if (decodedToken && decodedToken.exp < currentTime) {
+            localStorage.removeItem("token");
+          }
     } else {
       localStorage.setItem("token", token);
     }
