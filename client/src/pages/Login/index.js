@@ -34,6 +34,8 @@ function Login() {
         navigate('/');
       } else {
         message.error(response.message);
+        localStorage.removeItem('token');
+        navigate('/login');
       }
     } catch (error) {
       dispatch(SetLoader(false));
