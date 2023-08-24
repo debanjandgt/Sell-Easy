@@ -18,7 +18,7 @@ export const LoginUser = async (payload) => {
   } catch (error) {
    
       localStorage.removeItem("token");
-    navigate("/login");
+  
   }
 };
 
@@ -30,7 +30,7 @@ export const GetCurrentUser = async () => {
   } catch (error) {
    
     localStorage.removeItem("token");
-    navigate("/login");
+
   }
 };
 
