@@ -40,6 +40,8 @@ function Login() {
     } catch (error) {
       dispatch(SetLoader(false));
       message.error(error.message);
+       localStorage.removeItem('token');
+        navigate('/login');
     }
   };
 
