@@ -16,7 +16,9 @@ export const LoginUser = async (payload) => {
     const response = await axiosInstance.post("/api/users/login", payload);
     return response.data;
   } catch (error) {
-    return error.message;
+   
+      localStorage.removeItem("token");
+    navigate("/login");
   }
 };
 
@@ -26,7 +28,7 @@ export const GetCurrentUser = async () => {
     const response = await axiosInstance.get("/api/users/get-current-user");
     return response.data;
   } catch (error) {
-    return error.message;
+   
     localStorage.removeItem("token");
     navigate("/login");
   }
