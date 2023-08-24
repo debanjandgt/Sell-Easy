@@ -45,12 +45,12 @@ function Login() {
         const currentTime = Date.now() / 1000;
 
         if (decodedToken.exp < currentTime) {
-          localStorage.removeItem("token");
-          navigate("/login"); // Navigate to login if token expired
+          throw new Error("Token expired");
         }
       } catch (error) {
+        console.error("Token error:", error);
         localStorage.removeItem("token");
-        navigate("/login"); // Navigate to login if token is invalid
+        navigate("/login"); // Navigate to login on token error
       }
     }
   }, [navigate]);
