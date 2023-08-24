@@ -16,7 +16,6 @@ function Home() {
     category: [],
     age: [],
   });
-  const [searchQuery, setSearchQuery] = React.useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
@@ -56,7 +55,11 @@ function Home() {
               onClick={() => setShowFilters(!showFilters)}
             ></i>
           )}
-           
+          <input
+            type="text"
+            placeholder="Search Products  here..."
+            className="border border-gray-300 rounded border-solid px-2 py-1 h-14 w-full"
+          />
         </div>
         <div
           className={`
@@ -84,7 +87,7 @@ function Home() {
                   </p>
                   <Divider />
                   <span className="text-xl font-semibold text-green-700">
-                  ₹ {product.price}
+                    $ {product.price}
                   </span>
                 </div>
               </div>
