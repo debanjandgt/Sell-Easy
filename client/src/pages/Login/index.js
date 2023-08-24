@@ -39,10 +39,7 @@ const login = async () => {
         }
     }
     useEffect(() => {
-        if (localStorage.getItem('token')) {
-            navigate('/');
-        }
-      else{
+        if (!localStorage.getItem('token')) {
           localStorage.removeItem("token");
           navigate('/login');
       }
