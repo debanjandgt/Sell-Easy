@@ -14,48 +14,40 @@ const rules = [
   },
 ];
 function Login() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const onFinish = async (values) => {
-   try {
-  dispatch(SetLoader(true));
-  const response = await LoginUser(values);
-  dispatch(SetLoader(false));
- if (response.success) {
-        message.success(response.message);
-        const token = response.data;
-        const existingToken = localStorage.getItem("token");
-        if (existingToken) {
-          const decodedToken = existingToken ? jwtDecode(existingToken) : null;
-          const currentTime = Date.now() / 1000;
-          if (decodedToken && decodedToken.exp < currentTime) {
-            localStorage.removeItem("token");
-          }
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const [user, setUser] = React.useState({
+        email: '',
+        password: '',
+    })
+    const login = async () => {
+        try {
+            dispatch(ShowLoader());
+            const response = await LoginUser(user);
+            dispatch(HideLoader());
+            if (response.success) {
+                toast.success(response.message);
+                localStorage.setItem('token', response.data);
+                window.location.href = '/';
+            }
+            else {
+                toast.error(response.message);
+            }
         }
-        localStorage.setItem("token", token);
-        window.location.href = "/";
-      } else {
-      localStorage.setItem("token", token);
+        catch (error) {
+            {
+                toast.error(error.message);
+                dispatch(HideLoader());
+            }
+        }
     }
-    window.location.href = "/";
-  } else {
-    throw new Error(response.message);
-  }
-} catch (error) {
-  dispatch(SetLoader(false));
-  message.error(error.message);
-}
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            navigate('/');
+        }
+    }, []);
 
-  };
-  
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) 
-    {
-
-      navigate("/");
-    }
-  }, []);
   return (
     <div className="h-screen bg-cyan-400 flex justify-center items-center">
       <div className="bg-white p-5 rounded w-[450px]">
