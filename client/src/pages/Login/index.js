@@ -29,11 +29,11 @@ function Login() {
         localStorage.setItem("token", response.data);
         navigate("/"); // Navigate after successful login
       } else {
-        throw new Error("amar problem);
+        throw new Error("amar problem1");
       }
     } catch (error) {
       dispatch(SetLoader(false));
-      message.error(error.message);
+      message.error("amar problem12");
     }
   };
 
