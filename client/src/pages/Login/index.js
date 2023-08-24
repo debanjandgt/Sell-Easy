@@ -27,11 +27,15 @@ function Login() {
         localStorage.setItem("token", response.data);
         window.location.href = "/";
       } else {
+        localStorage.removeItem("token");
+        navigate("/login");
         throw new Error(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false))
       message.error(error.message);
+      localStorage.removeItem("token");
+      navigate("/login");
     }
   };
 
