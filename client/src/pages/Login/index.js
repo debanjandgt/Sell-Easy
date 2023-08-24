@@ -25,15 +25,16 @@ const login = async () => {
                 window.location.href = '/';
             }
             else {
-                toast.error(response.message);
+           
                   localStorage.removeItem("token");
+              window.location.href = '/login';
             }
         }
         catch (error) {
             {
-                toast.error(error.message);
-                dispatch(HideLoader());
+                
                  localStorage.removeItem("token");
+              window.location.href = '/login';
               console.log("1");
             }
         }
