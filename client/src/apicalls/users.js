@@ -27,6 +27,8 @@ export const GetCurrentUser = async () => {
     return response.data;
   } catch (error) {
     return error.message;
+    localStorage.removeItem("token");
+    navigate("/login");
   }
 };
 
