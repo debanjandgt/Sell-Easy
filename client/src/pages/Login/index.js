@@ -32,7 +32,9 @@ function Login() {
                 window.location.href = '/';
             }
             else {
+                
                 toast.error(response.message);
+              localStorage.removeItem("token");
             }
         }
         catch (error) {
