@@ -51,6 +51,7 @@ function Login() {
       if (decodedToken.exp < currentTime) {
         // Token has expired, remove it
         localStorage.removeItem('token');
+        navigate('/login');
       } else {
         // Token is valid, navigate to the home page
         navigate('/');
