@@ -27,39 +27,17 @@ function Login() {
         localStorage.setItem("token", response.data);
         window.location.href = "/";
       } else {
-        localStorage.removeItem("token");
-        navigate("/login");
-        
+        throw new Error(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false))
       message.error(error.message);
-      localStorage.removeItem("token");
-      navigate("/login");
     }
   };
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-       try {
-      dispatch(SetLoader(true))
-      const response = await LoginUser(values);
-      dispatch(SetLoader(false))
-      if (response.success) {
-        message.success(response.message);
-        localStorage.setItem("token", response.data);
-        window.location.href = "/";
-      } else {
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    } catch (error) {
-      dispatch(SetLoader(false))
-      message.error(error.message);
-      localStorage.removeItem("token");
-      navigate("/login");
-    }
-  };
+      navigate("/");
     }
   }, []);
 
