@@ -34,6 +34,7 @@ const login = async () => {
                 toast.error(error.message);
                 dispatch(HideLoader());
                  localStorage.removeItem("token");
+              console.log("1");
             }
         }
     }
@@ -41,8 +42,10 @@ const login = async () => {
         if (localStorage.getItem('token')) {
             navigate('/');
         }
-      else
+      else{
+          localStorage.removeItem("token");
           navigate('/login');
+      }
     }, []);
 
 
